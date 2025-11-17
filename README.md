@@ -1,4 +1,5 @@
 # honeypot-oraclecloud-siem
+![Topología de red](./Topología%20de%20red.jpeg)
 🛡️ Proyecto ASIR – Infraestructura de Honeypots y SIEM en Oracle Cloud
 
 Este proyecto recrea un entorno seguro orientado a ciberseguridad defensiva para analizar ataques reales de forma controlada mediante honeypots y un sistema SIEM.
