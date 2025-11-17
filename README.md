@@ -27,3 +27,20 @@ Este proyecto recrea un entorno seguro orientado a ciberseguridad defensiva para
 - Practicar segmentación de redes y endurecimiento del sistema  
 - Simular una infraestructura corporativa segura en entorno Cloud
 
+## 🚀 Cómo reproducir el proyecto (resumen)
+
+1. Crear 3 instancias en Oracle Cloud (2 públicas y 1 privada).
+2. Configurar reglas de seguridad (ingress/egress).
+3. Instalar Cowrie y DVWA en los honeypots.
+4. Configurar WireGuard como túnel hacia la red privada.
+5. Enviar logs al SIEM (Elastic Stack).
+
+## 📘 Lecciones aprendidas
+
+- Configuración segura de redes en Oracle Cloud.
+- Implementación de honeypots en producción controlada.
+- Uso de WireGuard como canal seguro de logs.
+- Correlación de eventos en un SIEM (Elastic).
+- Segmentar infraestructura y aplicar hardening básico.
+
+
