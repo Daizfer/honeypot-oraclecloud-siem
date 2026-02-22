@@ -1,32 +1,41 @@
-# Cloud-Honeypot-WireGuard-SIEM  
+# Cloud-Honeypot-WireGuard-SIEM
+
+![Oracle Cloud](https://img.shields.io/badge/Cloud-Oracle%20OCI-red)
+![ARM64](https://img.shields.io/badge/Architecture-ARM64-blue)
+![Docker](https://img.shields.io/badge/Containers-Docker-2496ED)
+![Wazuh](https://img.shields.io/badge/SIEM-Wazuh-005571)
+![WireGuard](https://img.shields.io/badge/VPN-WireGuard-88171A)
+![Status](https://img.shields.io/badge/Status-Production%20Validated-brightgreen)
+
 ![Topología de red](./Topología%20de%20red.png)
 
 ---
 
-## 🛡️ Proyecto ASIR – Laboratorio de Ciberseguridad Cloud (DMV)
+## 🛡️ Laboratorio de Ciberseguridad Cloud – Honeypots + SIEM Centralizado
 
 Infraestructura real desplegada en **Oracle Cloud (ARM64 – Always Free Tier)** orientada a la **captura, análisis y correlación de ataques reales** mediante honeypots de alta interactividad y un SIEM centralizado.
 
-Este proyecto no es una simulación teórica: es un **Despliegue Mínimo Viable (DMV)** completamente funcional, segmentado y validado extremo a extremo.
+No es una simulación local.  
+Es un **Despliegue Mínimo Viable (DMV)** completamente funcional, segmentado y validado extremo a extremo en cloud pública.
 
 ---
 
-## 🎯 Objetivo del proyecto
+## 🎯 Objetivos del proyecto
 
-- Capturar actividad maliciosa real en Internet.
+- Capturar actividad maliciosa real desde Internet.
 - Separar claramente **engaño, gestión y análisis**.
 - Centralizar eventos en un **SIEM aislado**.
-- Implementar un modelo de seguridad basado en:
-  - Segmentación de red.
-  - Principio de mínimo privilegio.
-  - Zero Trust.
-  - Infraestructura reproducible y sostenible (0€).
+- Aplicar principios de:
+  - Segmentación de red
+  - Mínimo privilegio
+  - Zero Trust
+  - Infraestructura reproducible y sostenible (0€)
 
 ---
 
-## 🏗️ Arquitectura final (Implementación real)
+## 🏗️ Arquitectura implementada
 
-El entorno está desplegado en **3 instancias ARM64 dentro de una VCN privada (10.0.1.0/24)**:
+El entorno está desplegado en **3 instancias ARM64 dentro de una VCN privada (10.0.1.0/24)**.
 
 ### 1️⃣ Sensor – Honeypots (Nodo expuesto)
 
@@ -37,56 +46,47 @@ El entorno está desplegado en **3 instancias ARM64 dentro de una VCN privada (1
   - `80/TCP` → DVWA (honeypot web)
 - **SSH real movido a 2222**
 - Wazuh Agent instalado
-- Contenedores gestionados con Docker Compose
+- Servicios gestionados con Docker Compose
 
 🔐 El puerto 22 no es el SSH real, sino el honeypot.  
-La gestión legítima se realiza en el puerto **2222** con autenticación por clave pública.
+La gestión legítima se realiza exclusivamente en el puerto **2222** con autenticación por clave pública.
 
 ---
 
-### 2️⃣ SIEM – wazuh-honeypot (Nodo aislado)
+### 2️⃣ SIEM – Wazuh Manager (Nodo aislado)
 
 - **SO:** Ubuntu 24.04 LTS (ARM)
 - **IP Pública:** ❌ No
 - **Acceso:** Solo por red privada o VPN
-- **Función:** Wazuh Manager + Dashboard
+- **Función:** Recepción, análisis y correlación de eventos
 
 📌 El SIEM nunca está expuesto a Internet.
 
 ---
 
-### 3️⃣ VPN – vpn-wireguard (Gateway seguro)
+### 3️⃣ VPN – WireGuard Gateway
 
 - **SO:** Ubuntu 24.04 LTS (ARM)
 - **Puerto expuesto:** `51820/UDP`
 - **Función:** Punto único de administración segura
 
 Permite:
+
 - Acceso privado a toda la VCN.
 - Gestión del SIEM sin exponerlo.
-- Separación total entre Internet y análisis.
+- Separación total entre Internet y capa de análisis.
 
 ---
 
 ## 🔁 Flujo completo validado
 
-```
-        Atacante (Internet)
-                 │
-                 ▼
-        Sensor (Cowrie / DVWA)
-                 │
-                 ▼
-             Wazuh Agent
-                 │
-                 ▼
-      (Red privada 10.0.1.0/24)
-                 │
-                 ▼
-        Wazuh Manager (SIEM)
-                 │
-                 ▼
-       Dashboard / Correlación
+```mermaid
+flowchart TD
+    A[Atacante - Internet] --> B[Sensor - Cowrie / DVWA]
+    B --> C[Wazuh Agent]
+    C --> D[Red Privada 10.0.1.0/24]
+    D --> E[Wazuh Manager - SIEM]
+    E --> F[Dashboard / Correlación]
 ```
 
 ✔ Evento generado  
@@ -95,7 +95,7 @@ Permite:
 ✔ Enviado por red privada  
 ✔ Visualizado en el SIEM  
 
-El ciclo completo fue validado en producción.
+El ciclo completo fue validado en entorno productivo.
 
 ---
 
@@ -110,19 +110,19 @@ El ciclo completo fue validado en producción.
 - Ubuntu 24.04 LTS
 
 ### 🎯 Honeypots
-- **Cowrie (SSH)**
-- **DVWA (Web vulnerable)**
+- Cowrie (SSH)
+- DVWA (Web vulnerable)
 
 ### 📊 Monitorización
-- **Wazuh (SIEM)**
+- Wazuh (SIEM)
 - Ingesta directa de logs Docker
 
 ### 🔐 Seguridad
 - WireGuard (VPN privada)
 - Hardening SSH (22 → 2222)
-- Separación gestión vs engaño
+- Separación gestión vs honeypot
 - Segmentación de red
-- Modelo egress-control planificado
+- Control de exposición pública
 
 ### ⚙️ DevOps
 - Docker
@@ -135,35 +135,48 @@ El ciclo completo fue validado en producción.
 ## ⚙️ Retos técnicos reales superados
 
 ### 🔹 Incompatibilidad ARM64 (`exec format error`)
-Muchas imágenes Docker x86_64 no funcionaban en Ampere A1.  
+Las imágenes Docker x86_64 no funcionaban en Ampere A1.  
 Se utilizaron imágenes compatibles o adaptadas a ARM.
 
-### 🔹 Conflicto 22 vs 2222
+### 🔹 Conflicto de puertos 22 vs 2222
 Se movió el SSH real a 2222 para liberar el 22 al honeypot.
 
 ### 🔹 Dependencias MySQL en DVWA
-Se migró a **SQLite** para:
+Migración a SQLite para:
 - Reducir complejidad
 - Eliminar dependencias externas
 - Facilitar restauraciones limpias
 
 ### 🔹 Monitorización de contenedores con Wazuh
-Se optó por ingesta directa de logs desde el host para garantizar trazabilidad completa.
+Se adoptó un enfoque robusto basado en la ingesta directa de logs desde el host.
 
 ---
 
 ## 🧱 Modelo de seguridad aplicado
 
-- Mínimo privilegio en Security Lists.
+- Principio de mínimo privilegio en Security Lists.
 - SIEM sin IP pública.
-- Gestión solo por VPN.
+- Administración exclusivamente mediante VPN.
 - Autenticación SSH por clave pública.
 - Separación total entre:
-  - Servicio real.
-  - Servicio de engaño.
-  - Capa de análisis.
+  - Servicio real
+  - Servicio de engaño
+  - Capa de análisis
 
 Arquitectura alineada con principios Zero Trust.
+
+---
+
+## 🧠 Competencias demostradas
+
+- Diseño de arquitectura segura en Cloud pública
+- Segmentación real en entorno productivo
+- Hardening de servicios expuestos
+- Adaptación multi-arquitectura (ARM64)
+- Integración Honeypot + SIEM
+- Resolución de incompatibilidades reales
+- Infraestructura sostenible sin coste operativo
+- Gestión completa del ciclo captura → análisis
 
 ---
 
@@ -173,19 +186,11 @@ Arquitectura alineada con principios Zero Trust.
 - **Licencias:** 0€
 - **Software:** 100% Open Source
 
-El proyecto se mantiene dentro del **Always Free Tier** de Oracle Cloud.
-
-El coste real fue en:
-- Ingeniería.
-- Resolución de incompatibilidades ARM64.
-- Hardening.
-- Validación de flujo completo.
-
-Se priorizó resolver técnicamente los problemas en ARM en lugar de migrar a instancias x86 de pago.
+Se optó deliberadamente por mantener la arquitectura en ARM64 Free Tier en lugar de migrar a instancias x86 de pago, priorizando resolución técnica y sostenibilidad.
 
 ---
 
-## 🚀 Cómo reproducir el laboratorio (Resumen)
+## 🚀 Reproducción (Resumen técnico)
 
 1. Crear VCN privada en OCI (10.0.1.0/24).
 2. Desplegar 3 instancias ARM64.
@@ -203,16 +208,11 @@ Se priorizó resolver técnicamente los problemas en ARM en lugar de migrar a in
 
 ---
 
-## 📊 Valor técnico del proyecto
+## 🏁 Conclusión
 
-Este laboratorio demuestra capacidad real en:
+Este proyecto demuestra capacidad real para diseñar, implementar y asegurar una infraestructura compleja en cloud pública bajo restricciones reales (ARM64, coste 0€, segmentación estricta).
 
-- Segmentación avanzada en cloud pública.
-- Gestión multi-nodo.
-- Adaptación ARM64.
-- Hardening SSH profesional.
-- Integración honeypot + SIEM.
-- Infraestructura sostenible sin coste.
-
-No es un laboratorio local:  
-es una **infraestructura cloud funcional, monitorizada y segmentada**.
+Arquitectura reproducible.  
+Monitorización activa.  
+Seguridad aplicada.  
+Infraestructura preparada para escalar.
