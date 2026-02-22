@@ -69,7 +69,6 @@ Permite:
 ---
 
 ## 🔁 Flujo completo validado
-
 Atacante (Internet)
 ↓
 Sensor (Cowrie / DVWA)
@@ -79,7 +78,6 @@ Wazuh Agent
 Wazuh Manager (SIEM)
 ↓
 Dashboard / Correlación
-
 
 ✔ Evento generado  
 ✔ Registrado en honeypot  
@@ -208,5 +206,3 @@ Este laboratorio demuestra capacidad real en:
 
 No es un laboratorio local:  
 es una **infraestructura cloud funcional, monitorizada y segmentada**.
-
-## 🔁 Flujo completo validado
