@@ -70,8 +70,6 @@ Permite:
 
 ## 🔁 Flujo completo validado
 
-## 🔁 Flujo completo validado
-
 ```
         Atacante (Internet)
                  │
