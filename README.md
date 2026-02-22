@@ -7,7 +7,12 @@
 ![WireGuard](https://img.shields.io/badge/VPN-WireGuard-88171A)
 ![Status](https://img.shields.io/badge/Status-Production%20Validated-brightgreen)
 
-![Topología de red](./Topología%20de%20red.png)
+## Topología de red
+
+> Diagrama autogenerado desde `diagrams/topologia.puml` mediante GitHub Actions.
+
+![Topología de red](./diagrams/topologia.svg)
+
 
 ---
 
