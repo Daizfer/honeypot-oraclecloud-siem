@@ -69,15 +69,22 @@ Permite:
 ---
 
 ## 🔁 Flujo completo validado
-Atacante (Internet)
-↓
-Sensor (Cowrie / DVWA)
-↓
-Wazuh Agent
-↓ (Red privada 10.0.1.0/24)
-Wazuh Manager (SIEM)
-↓
-Dashboard / Correlación
+    Atacante (Internet)
+             │
+             ▼
+    Sensor (Cowrie / DVWA)
+             │
+             ▼
+         Wazuh Agent
+             │
+             ▼
+  (Red privada 10.0.1.0/24)
+             │
+             ▼
+    Wazuh Manager (SIEM)
+             │
+             ▼
+   Dashboard / Correlación
 
 ✔ Evento generado  
 ✔ Registrado en honeypot  
